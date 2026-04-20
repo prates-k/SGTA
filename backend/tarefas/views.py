@@ -4,8 +4,18 @@ from .models import Tarefa
 # Create your views here.
 
 def listar_tarefas(request):
-    tarefas = Tarefa.objects.all().values()
-    return JsonResponse(list(tarefas), safe=False)
+    tarefas = Tarefa.objects.all()
+
+    data = []
+    for tarefa in tarefas:
+        data.append({
+            "id": tarefa.id,
+            "titulo": tarefa.titulo,
+            "descricao": tarefa.descricao,
+            "usuario_responsavel": tarefa.usuario_responsavel.nome if tarefa.usuario_responsavel else None
+        })
+
+    return JsonResponse(data, safe=False)
 
 def listar_tarefas_abertas(request):
     tarefas = Tarefa.objects.filter(status='ABERTA').values()
